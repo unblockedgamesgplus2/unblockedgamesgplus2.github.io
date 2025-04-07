@@ -1,13 +1,21 @@
+
 const fs = require('fs');
 const path = require('path');
 
 function replaceInFile(filePath) {
   try {
     const content = fs.readFileSync(filePath, 'utf8');
-    if (content.includes('Mario64unblocked.github.io')) {
-      const newContent = content.replace(/GamesGPlus\.gitlab\.io/g, 'Mario 64 unblocked');
+    let newContent = content;
+    let modified = false;
+
+    if (content.includes('Mario64unblocked.gitlab.io')) {
+      newContent = content.replace(/Mario64unblocked\.github\.io/g, 'Mario64unblocked.gitlab.io');
+      modified = true;
+    }
+
+    if (modified) {
       fs.writeFileSync(filePath, newContent);
-      console.log(`Processed file: ${filePath}`);
+      console.log(`Updated file: ${filePath}`);
     }
   } catch (err) {
     console.error(`Error processing ${filePath}:`, err);
