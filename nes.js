@@ -4,8 +4,8 @@ const path = require('path');
 function replaceInFile(filePath) {
   try {
     const content = fs.readFileSync(filePath, 'utf8');
-    if (content.includes('list-thumbnail')) {
-      const newContent = content.replace(/<div class="list-thumbnail"><img src="https:\/\/math181124\.github\.io(\/img\/[^"]+)"[^>]*>/g, '<div class="list-thumbnail"><img src="$1" class="lazyload">');
+    if (content.includes('Mario64unblocked.github.io')) {
+      const newContent = content.replace(/GamesGPlus\.gitlab\.io/g, 'Mario 64 unblocked');
       fs.writeFileSync(filePath, newContent);
       console.log(`Processed file: ${filePath}`);
     }
@@ -15,16 +15,20 @@ function replaceInFile(filePath) {
 }
 
 function walkDir(dir) {
-  const files = fs.readdirSync(dir);
-  files.forEach(file => {
-    const filePath = path.join(dir, file);
-    const stat = fs.statSync(filePath);
-    if (stat.isDirectory() && !filePath.includes('node_modules')) {
-      walkDir(filePath);
-    } else if (stat.isFile()) {
-      replaceInFile(filePath);
-    }
-  });
+  try {
+    const files = fs.readdirSync(dir);
+    files.forEach(file => {
+      const filePath = path.join(dir, file);
+      const stat = fs.statSync(filePath);
+      if (stat.isDirectory() && file !== 'node_modules' && file !== '.git') {
+        walkDir(filePath);
+      } else if (stat.isFile() && (file.endsWith('.html') || file.endsWith('.js') || file.endsWith('.json'))) {
+        replaceInFile(filePath);
+      }
+    });
+  } catch (err) {
+    console.error(`Error walking directory ${dir}:`, err);
+  }
 }
 
 walkDir('.');
